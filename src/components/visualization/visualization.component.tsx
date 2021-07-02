@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import './visualization.component.css';
 import PropTypes from 'prop-types';
-import {ChartProps, State, TableProps} from '../../utils/interface';
+import {BlockItem, ChartProps, State, TableProps} from '../../utils/interface';
 import {shuffleArray} from '../../utils/functions';
 import Block from '../block/block.component';
 import {bubbleSortInit, bubbleSortStep} from '../../algorithms/bubble-sort.algorithm';
+import {DEFAULT_COLOR} from '../../utils/constants';
 
 // setup height and width of the table
 const Chart = ({ children, height, width }: ChartProps) => (
@@ -14,7 +15,7 @@ const Chart = ({ children, height, width }: ChartProps) => (
 )
 
 function Visualization({length}: TableProps) {
-  const [list, setList] = useState<number[]>(Array);
+  const [list, setList] = useState<BlockItem[]>(Array);
   const [width, setWidth] = useState<number>(0);
   const [height, setHeight] = useState<number>(0);
 
@@ -24,11 +25,16 @@ function Visualization({length}: TableProps) {
 
   useEffect(() => {
     // generate shuffled array from 0 to n (length)
-    let array = shuffleArray(Array.from(Array(length).keys()));
+    let initArray = Array.from(Array(length).keys());
+
+    let array: BlockItem[] = shuffleArray(initArray.map(x => {
+      let v: BlockItem = {color: DEFAULT_COLOR, value: x};
+      return v;
+    }));
     setList([...array]);
 
     setWidth(array.length * (blockWidth + blockMargin));
-    setHeight(Math.max(...array) * heightIncrement);
+    setHeight(Math.max(...array.map((x: BlockItem) => x.value)) * heightIncrement);
   }, [length]);
 
   const runSort = () => {
@@ -42,22 +48,22 @@ function Visualization({length}: TableProps) {
     }
 
     setList([...state.array]);
-    console.log(list);
   }
 
   return (
     <div>
       <div className={'Visualization'}>
         <Chart height={height} width={width}>
-          {list.map((val, i) => {
+          {list.map((block: BlockItem, i: number) => {
             // use val + 1, since we have element with value = 0
-            const h = (val + 1) * (heightIncrement - 5);
+            const h = (block.value + 1) * (heightIncrement - 5);
             return (
               <Block key={i}
                      height={h}
                      width={blockWidth}
                      x={i * (blockWidth + blockMargin)}
                      y={height - h}
+                     color={block.color}
               />
             )
           })}

@@ -1,6 +1,7 @@
-import {State} from '../utils/interface';
+import {BlockItem, State} from '../utils/interface';
+import {COMPLETED_COLOR, SELECTED_COLOR} from '../utils/constants';
 
-function bubbleSortInit(array: number[]): State {
+function bubbleSortInit(array: BlockItem[]): State {
   return {
     array,
     swaps: 0,
@@ -21,11 +22,14 @@ function bubbleSortStep(state: State): Partial<State> {
 
   if (array[j] > array[j + 1]) {
     [array[j], array[j + 1]] = [array[j + 1], array[j]];
+    array[j].color = SELECTED_COLOR;
+    array[j + 1].color = SELECTED_COLOR;
     swaps++;
   }
   comparisons++;
 
   if (++j >= i) {
+    array[i].color = COMPLETED_COLOR;
     i--;
     j = 0;
   }

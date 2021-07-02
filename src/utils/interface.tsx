@@ -16,8 +16,13 @@ type BlockProps = {
   color: string;
 }
 
+type BlockItem = {
+  value: number;
+  color: string;
+}
+
 type State = {
-  array: number[];
+  array: BlockItem[];
   swaps: number;
   comparisons: number;
   i: number;
@@ -30,5 +35,6 @@ export type {
   TableProps,
   ChartProps,
   BlockProps,
+  BlockItem,
   State
 }

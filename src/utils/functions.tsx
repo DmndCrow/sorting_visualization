@@ -1,4 +1,6 @@
-function shuffleArray(props: Array<number>) {
+import {BlockItem} from './interface';
+
+function shuffleArray(props: BlockItem[]) {
   let array = [...props];
 
   // for each element of array
