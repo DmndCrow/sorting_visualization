@@ -16,9 +16,19 @@ type BlockProps = {
   color: string;
 }
 
+type State = {
+  array: number[];
+  swaps: number;
+  comparisons: number;
+  i: number;
+  j: number;
+  done: boolean;
+}
+
 
 export type {
   TableProps,
   ChartProps,
-  BlockProps
+  BlockProps,
+  State
 }

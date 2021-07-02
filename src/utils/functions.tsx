@@ -1,8 +1,11 @@
 function shuffleArray(props: Array<number>) {
   let array = [...props];
 
+  // for each element of array
   for (let i = array.length - 1; i > 0; i--) {
+    // random select another index
     const j = Math.floor(Math.random() * (i + 1));
+    // swap two elements
     [array[i], array[j]] = [array[j], array[i]];
   }
 
@@ -11,5 +14,5 @@ function shuffleArray(props: Array<number>) {
 
 
 export {
-  shuffleArray
+  shuffleArray,
 }

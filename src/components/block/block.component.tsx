@@ -6,6 +6,7 @@ function Block({ x, y, width, height, color }: BlockProps) {
   return (
     <svg className="Block">
       <rect x={x} y={y} width={width} height={height} fill={color}/>
+      <text x={x} y={y}>{height / 10}</text>
     </svg>
   );
 }
