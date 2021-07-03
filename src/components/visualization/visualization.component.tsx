@@ -1,25 +1,30 @@
-import React, {useEffect, useState} from 'react';
+import React, {ChangeEvent, useEffect, useRef, useState} from 'react';
 import './visualization.component.css';
 import PropTypes from 'prop-types';
-import {BlockItem, ChartProps, State, TableProps} from '../../utils/interface';
-import {delay, shuffleArray} from '../../utils/functions';
-import {bubbleSortInit, bubbleSortStep} from '../../algorithms/bubble-sort.algorithm';
+import {BlockItem, ChartProps, TableProps} from '../../utils/interface';
+import {shuffleArray} from '../../utils/functions';
+import {runBubbleSort} from '../../algorithms/bubble-sort.algorithm';
 import {DEFAULT_COLOR} from '../../utils/constants';
-import {Block} from '../block';
+import {generateChart} from '../../utils/functions';
 
 // setup height and width of the vertical bar
-const Chart = ({ children, height, width }: ChartProps) => (
+const Chart = ({children, height, width}: ChartProps) => (
   <svg viewBox={`0 0 ${width} ${height}`} height={height} width={width}>
     {children}
   </svg>
-)
+);
 
 function Visualization({length}: TableProps) {
   const [list, setList] = useState<BlockItem[]>(Array);
   const [width, setWidth] = useState<number>(0);
   const [height, setHeight] = useState<number>(0);
   const [delayTime, setDelayTime] = useState<number>(0);
-  const [history, setHistory] = useState<BlockItem[][]>([]);
+  const [chartVisualization, setChartVisualization] = useState<JSX.Element[]>([]);
+  const [comparison, setComparison] = useState<number>(0);
+  const [swap, setSwap] = useState<number>(0);
+
+  const buttonRef = useRef<any>(null)
+  const inputRef = useRef<any>(null)
 
 
   useEffect(() => {
@@ -27,6 +32,11 @@ function Visualization({length}: TableProps) {
     generateShuffledArray();
   }, [length]);
 
+  useEffect(() => {
+    if (list.length > 0) {
+      setChartVisualization([...generateChart(list, height, width)]);
+    }
+  }, [list])
 
   const generateShuffledArray = () => {
     let initArray = Array.from(Array(length).keys());
@@ -40,37 +50,39 @@ function Visualization({length}: TableProps) {
     setWidth(window.innerWidth - 100);
     setHeight(800);
     setHeight(window.innerHeight);
-  }
+  };
 
+  const runSortingAlgorithm = async () => {
+    // create generator
+    let it = runBubbleSort(list);
 
-  const runSort = async () => {
-    let a = new Date().getTime();
+    // create local delay timer
+    let localDelayTime = delayTime;
+    let result = it.next();
 
-    let state: State = bubbleSortInit(list);
-    let hst = [];
+    while (!result.done) {
+      setChartVisualization([...generateChart(result.value.array, height, width)]);
+      // setComparison(result.value.comparisons);
+      // setSwap(result.value.swaps);
 
-    setList([...state.array]);
-    await delay(delayTime);
+      await new Promise((resolve, reject) => {
+        // sleep for n milliseconds
+        setTimeout(() => resolve(null), localDelayTime);
 
-    while (!state.done) {
-      hst.push(state.array);
-      state = {
-        ...state,
-        ...bubbleSortStep(state)
-      };
-      setList([...state.array]);
-      await delay(delayTime);
+        // on button click to rerun algorithm, restore generator with initial data
+        buttonRef.current.addEventListener('click', () => {
+          resolve(it = runBubbleSort(list));
+        });
+
+        // on delayTime change, update local variable
+        inputRef.current.addEventListener('change', (event: ChangeEvent<HTMLInputElement>) => {
+          resolve(localDelayTime = +event.target.value);
+        });
+      });
+
+      // go to next element of an iterator
+      result = it.next();
     }
-
-    hst.push(state.array);
-    setHistory(hst);
-
-    console.log(new Date().getTime() - a, 'ms');
-    setList([...state.array]);
-  }
-
-  const runAlgorithm = () => {
-    runSort().then();
   }
 
   return (
@@ -78,45 +90,29 @@ function Visualization({length}: TableProps) {
       <div className={'Visualization'}>
         <div className={'Charts'}>
           <Chart height={height} width={width}>
-            {list.map((block: BlockItem, i: number) => {
-              // use val + 1, since we have element with value = 0
-              // create dynamic value to display all blocks
-              let ratio = width / (4 * list.length);
-
-              // create dynamic height of a block
-              const usableHeight = height * 0.75;
-              const blockHeight = (block.value + 1) / list.length * usableHeight;
-
-              return (
-                <Block key={i}
-                       height={blockHeight}
-                       width={3 * ratio}
-                       x={i * 4 * ratio}
-                       y={height - blockHeight}
-                       value={block.value + 1}
-                       color={block.color}
-                />
-              )
-            })}
+            {chartVisualization}
           </Chart>
+          <p>Number of comparisons: {comparison}</p>
+          <p>Number of swaps: {swap}</p>
         </div>
       </div>
-      <label htmlFor='slider'>{delayTime}</label>
+      <label htmlFor="slider">{delayTime}</label>
       <input type={'range'}
+             ref={inputRef}
              id={'slider'}
-             min={1}
-             max={1000}
-             step={50}
+             min={0}
+             max={100}
+             step={10}
              value={delayTime}
              onChange={(ev) => setDelayTime(+ev.target.value)}
       />
-      <button onClick={() => runAlgorithm()}>Run script</button>
+      <button ref={buttonRef} onClick={() => runSortingAlgorithm()}>Run script</button>
     </div>
   );
 }
 
 Visualization.propTypes = {
-  length: PropTypes.number.isRequired
-}
+  length: PropTypes.number.isRequired,
+};
 
 export default Visualization;

@@ -1,3 +1,3 @@
 export const DEFAULT_COLOR = '#68f3e9';
-export const COMPLETED_COLOR = '#00ff68'
-export const SELECTED_COLOR = '#fac300';
+export const COMPLETED_COLOR = '#0dee06'
+export const SELECTED_COLOR = '#db035a';

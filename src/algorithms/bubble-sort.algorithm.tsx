@@ -61,7 +61,29 @@ function bubbleSortStep(state: State): Partial<State> {
   return {array, swaps, comparisons, i, j};
 }
 
+// generator that runs bubble sort
+function* runBubbleSort(array: BlockItem[]): Generator<State> {
+  // generator initial state of an bubble sort algorithm
+  let state: State = bubbleSortInit(array);
+
+  // return initial state
+  yield state;
+
+  // while list is not sorted update state and return it
+  while (!state.done) {
+    state = {
+      ...state,
+      ...bubbleSortStep(state),
+    };
+    yield state;
+  }
+
+  // return final sorted state of a list
+  yield state;
+}
+
 export {
   bubbleSortInit,
-  bubbleSortStep
+  bubbleSortStep,
+  runBubbleSort
 }

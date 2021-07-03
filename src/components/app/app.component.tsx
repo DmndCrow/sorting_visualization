@@ -4,7 +4,7 @@ import Header from '../header/header.component';
 import {Visualization} from '../visualization';
 
 function App() {
-  const length = 1000;
+  const length = 100;
 
   return (
     <div>
