@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import './visualization.component.css';
 import PropTypes from 'prop-types';
 import {BlockItem, ChartProps, State, TableProps} from '../../utils/interface';
-import {delay, shuffleArray, sleep} from '../../utils/functions';
+import {delay, shuffleArray} from '../../utils/functions';
 import {bubbleSortInit, bubbleSortStep} from '../../algorithms/bubble-sort.algorithm';
 import {DEFAULT_COLOR} from '../../utils/constants';
 import {Block} from '../block';
@@ -18,7 +18,7 @@ function Visualization({length}: TableProps) {
   const [list, setList] = useState<BlockItem[]>(Array);
   const [width, setWidth] = useState<number>(0);
   const [height, setHeight] = useState<number>(0);
-  const [delayTime, setDelayTime] = useState<number>(10);
+  const [delayTime, setDelayTime] = useState<number>(0);
   const [history, setHistory] = useState<BlockItem[][]>([]);
 
 
@@ -104,7 +104,7 @@ function Visualization({length}: TableProps) {
       <label htmlFor='slider'>{delayTime}</label>
       <input type={'range'}
              id={'slider'}
-             min={10}
+             min={1}
              max={1000}
              step={50}
              value={delayTime}

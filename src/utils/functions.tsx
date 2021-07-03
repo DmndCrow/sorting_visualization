@@ -16,18 +16,8 @@ function shuffleArray(props: BlockItem[]) {
 
 const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
-function sleep(ms: number) {
-  let start = new Date().getTime();
-  for (let i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - start) > ms){
-      break;
-    }
-  }
-}
-
 
 export {
   shuffleArray,
-  delay,
-  sleep
+  delay
 }
