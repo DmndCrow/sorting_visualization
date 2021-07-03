@@ -22,6 +22,7 @@ function Visualization({length}: TableProps) {
   const blockWidth = 30;
   const blockMargin = 10;
   const heightIncrement = 15;
+  const delayTime = 500;
 
   useEffect(() => {
     // generate shuffled array from 0 to n (length)
@@ -37,15 +38,25 @@ function Visualization({length}: TableProps) {
     setHeight(Math.max(...array.map((x: BlockItem) => x.value)) * heightIncrement);
   }, [length]);
 
-  const runSort = () => {
+  const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+
+  const runSort = async () => {
     let state: State = bubbleSortInit(list);
+
+    setList([...state.array]);
+    await delay(delayTime);
 
     while (!state.done) {
       state = {
         ...state,
         ...bubbleSortStep(state)
       };
+      setList([...state.array]);
+      console.log(state.i, state.j, state.array.length)
+      await delay(delayTime);
     }
+
+    console.log(state.array.map(x => x.value))
 
     setList([...state.array]);
   }
