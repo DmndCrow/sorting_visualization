@@ -14,7 +14,10 @@ function shuffleArray(props: BlockItem[]) {
   return array;
 }
 
+const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+
 
 export {
   shuffleArray,
+  delay
 }

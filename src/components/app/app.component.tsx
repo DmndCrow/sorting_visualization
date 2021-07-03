@@ -1,10 +1,10 @@
 import React from 'react';
 import './app.component.css';
 import Header from '../header/header.component';
-import Visualization from '../visualization/visualization.component';
+import {Visualization} from '../visualization';
 
 function App() {
-  const length = 40;
+  const length = 20;
 
   return (
     <div>

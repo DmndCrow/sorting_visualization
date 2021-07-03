@@ -2,12 +2,12 @@ import React, {useEffect, useState} from 'react';
 import './visualization.component.css';
 import PropTypes from 'prop-types';
 import {BlockItem, ChartProps, State, TableProps} from '../../utils/interface';
-import {shuffleArray} from '../../utils/functions';
-import Block from '../block/block.component';
+import {delay, shuffleArray} from '../../utils/functions';
 import {bubbleSortInit, bubbleSortStep} from '../../algorithms/bubble-sort.algorithm';
 import {DEFAULT_COLOR} from '../../utils/constants';
+import {Block} from '../block';
 
-// setup height and width of the table
+// setup height and width of the vertical bar
 const Chart = ({ children, height, width }: ChartProps) => (
   <svg viewBox={`0 0 ${width} ${height}`} height={height} width={width}>
     {children}
@@ -18,14 +18,18 @@ function Visualization({length}: TableProps) {
   const [list, setList] = useState<BlockItem[]>(Array);
   const [width, setWidth] = useState<number>(0);
   const [height, setHeight] = useState<number>(0);
+  const [delayTime, setDelayTime] = useState<number>(200);
 
   const blockWidth = 30;
   const blockMargin = 10;
   const heightIncrement = 15;
-  const delayTime = 500;
 
   useEffect(() => {
     // generate shuffled array from 0 to n (length)
+    generateShuffledArray();
+  }, [length]);
+
+  const generateShuffledArray = () => {
     let initArray = Array.from(Array(length).keys());
 
     let array: BlockItem[] = shuffleArray(initArray.map(x => {
@@ -36,9 +40,8 @@ function Visualization({length}: TableProps) {
 
     setWidth(array.length * (blockWidth + blockMargin));
     setHeight(Math.max(...array.map((x: BlockItem) => x.value)) * heightIncrement);
-  }, [length]);
+  }
 
-  const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
   const runSort = async () => {
     let state: State = bubbleSortInit(list);
@@ -52,13 +55,14 @@ function Visualization({length}: TableProps) {
         ...bubbleSortStep(state)
       };
       setList([...state.array]);
-      console.log(state.i, state.j, state.array.length)
       await delay(delayTime);
     }
 
-    console.log(state.array.map(x => x.value))
-
     setList([...state.array]);
+  }
+
+  const updateDelay = (ms: string) => {
+    setDelayTime(+ms);
   }
 
   return (
@@ -80,6 +84,15 @@ function Visualization({length}: TableProps) {
           })}
         </Chart>
       </div>
+      <label htmlFor='slider'>{delayTime}</label>
+      <input type={'range'}
+             id={'slider'}
+             min={200}
+             max={2000}
+             step={200}
+             value={delayTime}
+             onChange={(ev) => updateDelay(ev.target.value)}
+      />
       <button onClick={() => runSort()}>Run script</button>
     </div>
   );
