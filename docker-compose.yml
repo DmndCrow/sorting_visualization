@@ -1,0 +1,17 @@
+version: '3.9'
+
+services:
+  visualization:
+    container_name: sorting_visualization
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: npm start
+    volumes:
+      - '.:/app'
+      - '/app/node_modules'
+    ports:
+      - 3000:3000
+    stdin_open: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
