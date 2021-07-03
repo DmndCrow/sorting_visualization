@@ -2,16 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {BlockProps} from '../../utils/interface';
 
-function Block({ x, y, width, height, color }: BlockProps) {
+function Block({ x, y, width, height, color, value }: BlockProps) {
   return (
     <svg className="Block">
       <rect x={x} y={y} width={width} height={height} fill={color}/>
-      <text x={x} y={y}>{height / 10}</text>
+      {/*<text x={x} y={y}>{value}</text>*/}
     </svg>
   );
 }
 
 Block.propTypes = {
+  value: PropTypes.number.isRequired,
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
   width: PropTypes.number.isRequired,

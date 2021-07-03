@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import './visualization.component.css';
 import PropTypes from 'prop-types';
 import {BlockItem, ChartProps, State, TableProps} from '../../utils/interface';
-import {delay, shuffleArray} from '../../utils/functions';
+import {delay, shuffleArray, sleep} from '../../utils/functions';
 import {bubbleSortInit, bubbleSortStep} from '../../algorithms/bubble-sort.algorithm';
 import {DEFAULT_COLOR} from '../../utils/constants';
 import {Block} from '../block';
@@ -18,16 +18,15 @@ function Visualization({length}: TableProps) {
   const [list, setList] = useState<BlockItem[]>(Array);
   const [width, setWidth] = useState<number>(0);
   const [height, setHeight] = useState<number>(0);
-  const [delayTime, setDelayTime] = useState<number>(200);
+  const [delayTime, setDelayTime] = useState<number>(10);
+  const [history, setHistory] = useState<BlockItem[][]>([]);
 
-  const blockWidth = 30;
-  const blockMargin = 10;
-  const heightIncrement = 15;
 
   useEffect(() => {
     // generate shuffled array from 0 to n (length)
     generateShuffledArray();
   }, [length]);
+
 
   const generateShuffledArray = () => {
     let initArray = Array.from(Array(length).keys());
@@ -38,18 +37,23 @@ function Visualization({length}: TableProps) {
     }));
     setList([...array]);
 
-    setWidth(array.length * (blockWidth + blockMargin));
-    setHeight(Math.max(...array.map((x: BlockItem) => x.value)) * heightIncrement);
+    setWidth(window.innerWidth - 100);
+    setHeight(800);
+    setHeight(window.innerHeight);
   }
 
 
   const runSort = async () => {
+    let a = new Date().getTime();
+
     let state: State = bubbleSortInit(list);
+    let hst = [];
 
     setList([...state.array]);
     await delay(delayTime);
 
     while (!state.done) {
+      hst.push(state.array);
       state = {
         ...state,
         ...bubbleSortStep(state)
@@ -58,42 +62,55 @@ function Visualization({length}: TableProps) {
       await delay(delayTime);
     }
 
+    hst.push(state.array);
+    setHistory(hst);
+
+    console.log(new Date().getTime() - a, 'ms');
     setList([...state.array]);
   }
 
-  const updateDelay = (ms: string) => {
-    setDelayTime(+ms);
+  const runAlgorithm = () => {
+    runSort().then();
   }
 
   return (
     <div>
       <div className={'Visualization'}>
-        <Chart height={height} width={width}>
-          {list.map((block: BlockItem, i: number) => {
-            // use val + 1, since we have element with value = 0
-            const h = (block.value + 1) * (heightIncrement - 5);
-            return (
-              <Block key={i}
-                     height={h}
-                     width={blockWidth}
-                     x={i * (blockWidth + blockMargin)}
-                     y={height - h}
-                     color={block.color}
-              />
-            )
-          })}
-        </Chart>
+        <div className={'Charts'}>
+          <Chart height={height} width={width}>
+            {list.map((block: BlockItem, i: number) => {
+              // use val + 1, since we have element with value = 0
+              // create dynamic value to display all blocks
+              let ratio = width / (4 * list.length);
+
+              // create dynamic height of a block
+              const usableHeight = height * 0.75;
+              const blockHeight = (block.value + 1) / list.length * usableHeight;
+
+              return (
+                <Block key={i}
+                       height={blockHeight}
+                       width={3 * ratio}
+                       x={i * 4 * ratio}
+                       y={height - blockHeight}
+                       value={block.value + 1}
+                       color={block.color}
+                />
+              )
+            })}
+          </Chart>
+        </div>
       </div>
       <label htmlFor='slider'>{delayTime}</label>
       <input type={'range'}
              id={'slider'}
-             min={200}
-             max={2000}
-             step={200}
+             min={10}
+             max={1000}
+             step={50}
              value={delayTime}
-             onChange={(ev) => updateDelay(ev.target.value)}
+             onChange={(ev) => setDelayTime(+ev.target.value)}
       />
-      <button onClick={() => runSort()}>Run script</button>
+      <button onClick={() => runAlgorithm()}>Run script</button>
     </div>
   );
 }

@@ -14,6 +14,7 @@ type BlockProps = {
   width: number;
   height: number;
   color: string;
+  value: number;
 }
 
 type BlockItem = {
