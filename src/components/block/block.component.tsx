@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {BlockProps} from '../../utils/interface';
+import {BlockProps} from '../../utils/props';
 
 function Block({ x, y, width, height, color, value }: BlockProps) {
   return (

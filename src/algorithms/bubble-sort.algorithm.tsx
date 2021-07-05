@@ -1,4 +1,4 @@
-import {BlockItem, State} from '../utils/interface';
+import {BlockItem, State} from '../utils/types';
 import {COMPLETED_COLOR, DEFAULT_COLOR, SELECTED_COLOR} from '../utils/constants';
 
 // initialize bubble sorting algorithm
@@ -18,7 +18,6 @@ function bubbleSortInit(array: BlockItem[]): State {
     done: false
   };
 }
-
 
 // run bubble sort algorithm
 function bubbleSortStep(state: State): Partial<State> {

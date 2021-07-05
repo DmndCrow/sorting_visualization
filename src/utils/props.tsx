@@ -17,25 +17,16 @@ type BlockProps = {
   value: number;
 }
 
-type BlockItem = {
-  value: number;
-  color: string;
+type HeaderProps = {
+  length: number;
+  setLength: any;
+  algorithm: string;
+  setAlgorithm: any;
 }
-
-type State = {
-  array: BlockItem[];
-  swaps: number;
-  comparisons: number;
-  i: number;
-  j: number;
-  done: boolean;
-}
-
 
 export type {
   TableProps,
   ChartProps,
   BlockProps,
-  BlockItem,
-  State
+  HeaderProps
 }

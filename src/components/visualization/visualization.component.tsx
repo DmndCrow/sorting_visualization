@@ -1,11 +1,12 @@
 import React, {ChangeEvent, useEffect, useRef, useState} from 'react';
 import './visualization.component.css';
 import PropTypes from 'prop-types';
-import {BlockItem, ChartProps, TableProps} from '../../utils/interface';
+import {BlockItem} from '../../utils/types';
 import {shuffleArray} from '../../utils/functions';
 import {runBubbleSort} from '../../algorithms/bubble-sort.algorithm';
 import {DEFAULT_COLOR} from '../../utils/constants';
 import {generateChart} from '../../utils/functions';
+import {ChartProps, TableProps} from '../../utils/props';
 
 // setup height and width of the vertical bar
 const Chart = ({children, height, width}: ChartProps) => (

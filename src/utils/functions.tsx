@@ -1,4 +1,4 @@
-import {BlockItem, State} from './interface';
+import {BlockItem} from './types';
 import React from 'react';
 import {Block} from '../components/block';
 

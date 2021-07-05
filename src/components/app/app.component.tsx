@@ -1,14 +1,19 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './app.component.css';
-import Header from '../header/header.component';
 import {Visualization} from '../visualization';
+import {Header} from '../header';
 
 function App() {
-  const length = 100;
+  const [length, setLength] = useState(100);
+  const [algorithm, setAlgorithm] = useState('bubble-sort');
 
   return (
     <div>
-      <Header />
+      <Header length={length}
+              setLength={setLength}
+              algorithm={algorithm}
+              setAlgorithm={setAlgorithm}
+      />
       <Visualization length={length}/>
     </div>
   );
