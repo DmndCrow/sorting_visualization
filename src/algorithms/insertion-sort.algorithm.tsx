@@ -1,5 +1,5 @@
 import {BlockItem, State} from '../utils/types';
-import {COMPLETED_COLOR, DEFAULT_COLOR, ITERATION_COLOR} from '../utils/constants';
+import {COMPLETED_COLOR, DEFAULT_COLOR, ITERATION_COLOR, SELECTED_COLOR} from '../utils/constants';
 
 // initialize bubble sorting algorithm
 function insertionSortInit(array: BlockItem[]): State {
@@ -21,10 +21,10 @@ function insertionSortInit(array: BlockItem[]): State {
 }
 
 // update color of adjacent nodes
-function updateColor(array: BlockItem[], index: number, color: string) {
+function updateColor(array: BlockItem[], index: number, color1: string, color2: string) {
   if (index >= 0 && index + 1 < array.length) {
-    array[index].color = color;
-    array[index + 1].color = color;
+    array[index].color = color1;
+    array[index + 1].color = color2;
   }
 }
 
@@ -43,7 +43,7 @@ function insertionSortStep(state: State): Partial<State> {
   // swap values based on condition
   if (j >= 0 && array[j + 1].value < array[j].value) {
     // restore default colors for previous nodes
-    updateColor(array, j, DEFAULT_COLOR);
+    updateColor(array, j, DEFAULT_COLOR, DEFAULT_COLOR);
 
     // swap items and iterate to next node
     [array[j], array[j + 1]] = [array[j + 1], array[j]];
@@ -52,17 +52,17 @@ function insertionSortStep(state: State): Partial<State> {
     j--;
 
     // mark iterated node as selected
-    updateColor(array, j, ITERATION_COLOR);
+    updateColor(array, j, ITERATION_COLOR, SELECTED_COLOR);
   } else {
     // restore default colors for previous nodes
-    updateColor(array, j, DEFAULT_COLOR);
+    updateColor(array, j, DEFAULT_COLOR, DEFAULT_COLOR);
 
     // start from next node
     j = i;
     i++;
 
     // mark next nodes as selected
-    updateColor(array, i - 1, ITERATION_COLOR);
+    updateColor(array, i - 1, ITERATION_COLOR, SELECTED_COLOR);
   }
 
   return { array, swaps, comparisons, i, j };
