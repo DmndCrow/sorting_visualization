@@ -1,12 +1,12 @@
 import {BlockItem, State} from '../utils/types';
-import {COMPLETED_COLOR, DEFAULT_COLOR, SELECTED_COLOR} from '../utils/constants';
+import {COMPLETED_COLOR, DEFAULT_COLOR, ITERATION_COLOR} from '../utils/constants';
 
 // initialize bubble sorting algorithm
 function bubbleSortInit(array: BlockItem[]): State {
   // set initial 2 nodes for comparison with required color
-  // and mark rest of block items with default color
+  // and mark rest of block items with ITERATION color
   array.forEach((node: BlockItem, i: number) => {
-    array[i].color = i < 2 ? SELECTED_COLOR : DEFAULT_COLOR;
+    array[i].color = i < 2 ? ITERATION_COLOR : DEFAULT_COLOR;
   });
 
   return {
@@ -15,7 +15,8 @@ function bubbleSortInit(array: BlockItem[]): State {
     comparisons: 0,
     i: array.length - 1,
     j: 0,
-    done: false
+    done: false,
+    selected_index: 0
   };
 }
 
@@ -33,9 +34,9 @@ function bubbleSortStep(state: State): Partial<State> {
   }
 
   // mark nodes as selected
-  array[j].color = SELECTED_COLOR;
+  array[j].color = ITERATION_COLOR;
   if (i > 0) {
-    array[j + 1].color = SELECTED_COLOR;
+    array[j + 1].color = ITERATION_COLOR;
   }
 
   // compare adjacent nodes and swap them, if necessary

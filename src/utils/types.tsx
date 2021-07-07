@@ -10,6 +10,7 @@ type State = {
   i: number;
   j: number;
   done: boolean;
+  selected_index: number;
 }
 
 

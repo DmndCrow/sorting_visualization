@@ -28,7 +28,6 @@ function Visualization({length, algorithm}: TableProps) {
   const inputRef = useRef<any>(null);
   const changeAlgoRef = useRef<any>(null);
 
-
   useEffect(() => {
     // generate shuffled array from 0 to n (length)
     generateShuffledArray();

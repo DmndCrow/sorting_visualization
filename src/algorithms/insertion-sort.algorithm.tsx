@@ -1,12 +1,12 @@
 import {BlockItem, State} from '../utils/types';
-import {COMPLETED_COLOR, DEFAULT_COLOR, SELECTED_COLOR} from '../utils/constants';
+import {COMPLETED_COLOR, DEFAULT_COLOR, ITERATION_COLOR} from '../utils/constants';
 
 // initialize bubble sorting algorithm
 function insertionSortInit(array: BlockItem[]): State {
   // set initial 2 nodes for comparison with required color
   // and mark rest of block items with default color
   array.forEach((node: BlockItem, i: number) => {
-    array[i].color = i < 2 ? SELECTED_COLOR : DEFAULT_COLOR;
+    array[i].color = i < 2 ? ITERATION_COLOR : DEFAULT_COLOR;
   });
 
   return {
@@ -15,7 +15,8 @@ function insertionSortInit(array: BlockItem[]): State {
     comparisons: 0,
     i: 1,
     j: 0,
-    done: false
+    done: false,
+    selected_index: 0
   };
 }
 
@@ -32,7 +33,7 @@ function insertionSortStep(state: State): Partial<State> {
   let { array, swaps, comparisons, i, j } = state;
 
   // when reach the end, mark array as completed
-  if (i == array.length) {
+  if (i === array.length) {
     array.forEach((node: BlockItem, index: number) => {
       array[index].color = COMPLETED_COLOR;
     });
@@ -51,7 +52,7 @@ function insertionSortStep(state: State): Partial<State> {
     j--;
 
     // mark iterated node as selected
-    updateColor(array, j, SELECTED_COLOR);
+    updateColor(array, j, ITERATION_COLOR);
   } else {
     // restore default colors for previous nodes
     updateColor(array, j, DEFAULT_COLOR);
@@ -61,7 +62,7 @@ function insertionSortStep(state: State): Partial<State> {
     i++;
 
     // mark next nodes as selected
-    updateColor(array, i - 1, SELECTED_COLOR);
+    updateColor(array, i - 1, ITERATION_COLOR);
   }
 
   return { array, swaps, comparisons, i, j };
