@@ -7,7 +7,7 @@ function bubbleSortInit(array: BlockItem[]): State {
   // and mark rest of block items with default color
   array.forEach((node: BlockItem, i: number) => {
     array[i].color = i < 2 ? SELECTED_COLOR : DEFAULT_COLOR;
-  })
+  });
 
   return {
     array,
@@ -24,7 +24,7 @@ function bubbleSortStep(state: State): Partial<State> {
   let { array, swaps, comparisons, i, j } = state;
 
   if (i < 0) {
-    return {done: true}
+    return {done: true};
   }
 
   // restore color of already visited node
@@ -82,7 +82,5 @@ function* runBubbleSort(array: BlockItem[]): Generator<State> {
 }
 
 export {
-  bubbleSortInit,
-  bubbleSortStep,
   runBubbleSort
 }

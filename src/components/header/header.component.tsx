@@ -24,7 +24,7 @@ function Header({length, setLength, algorithm, setAlgorithm}: HeaderProps) {
       <select value={algorithm} onChange={(ev: ChangeEvent<HTMLSelectElement>) => changeAlgorithm(ev)}>
         {
           Object.entries(algorithms).map(([key, val], i: number) => {
-            return <option key={i} value={key}>{val}</option>
+            return <option key={i} value={key}>{val.label}</option>
           })
         }
       </select>

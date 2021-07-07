@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {BlockItem} from '../../utils/types';
 import {shuffleArray} from '../../utils/functions';
 import {runBubbleSort} from '../../algorithms/bubble-sort.algorithm';
-import {DEFAULT_COLOR} from '../../utils/constants';
+import {algorithms, DEFAULT_COLOR} from '../../utils/constants';
 import {generateChart} from '../../utils/functions';
 import {ChartProps, TableProps} from '../../utils/props';
 
@@ -15,7 +15,7 @@ const Chart = ({children, height, width}: ChartProps) => (
   </svg>
 );
 
-function Visualization({length}: TableProps) {
+function Visualization({length, algorithm}: TableProps) {
   const [list, setList] = useState<BlockItem[]>(Array);
   const [width, setWidth] = useState<number>(0);
   const [height, setHeight] = useState<number>(0);
@@ -24,8 +24,9 @@ function Visualization({length}: TableProps) {
   const [comparison, setComparison] = useState<number>(0);
   const [swap, setSwap] = useState<number>(0);
 
-  const buttonRef = useRef<any>(null)
-  const inputRef = useRef<any>(null)
+  const buttonRef = useRef<any>(null);
+  const inputRef = useRef<any>(null);
+  const changeAlgoRef = useRef<any>(null);
 
 
   useEffect(() => {
@@ -37,7 +38,20 @@ function Visualization({length}: TableProps) {
     if (list.length > 0) {
       setChartVisualization([...generateChart(list, height, width)]);
     }
-  }, [list])
+  }, [list]);
+
+  // every time algorithm changed
+  useEffect(() => {
+    if (changeAlgoRef.current) {
+      // create new shuffled array
+      generateShuffledArray();
+      // stop currently running async function
+      changeAlgoRef.current.click();
+
+      // update chart to initial array
+      setChartVisualization([...generateChart(list, height, width)]);
+    }
+  }, [algorithm]);
 
   const generateShuffledArray = () => {
     let initArray = Array.from(Array(length).keys());
@@ -54,35 +68,44 @@ function Visualization({length}: TableProps) {
   };
 
   const runSortingAlgorithm = async () => {
-    // create generator
-    let it = runBubbleSort(list);
+    // create generator from sorting algorithm
+    let it = algorithms[algorithm].sorting(list);
 
     // create local delay timer
     let localDelayTime = delayTime;
     let result = it.next();
+    let stop = false;
+    let pause = false;
 
-    while (!result.done) {
-      setChartVisualization([...generateChart(result.value.array, height, width)]);
-      // setComparison(result.value.comparisons);
-      // setSwap(result.value.swaps);
+    while (!result.done && !stop) {
+      if (!pause) {
+        setChartVisualization([...generateChart(result.value.array, height, width)]);
+        // setComparison(result.value.comparisons);
+        // setSwap(result.value.swaps);
 
-      await new Promise((resolve, reject) => {
-        // sleep for n milliseconds
-        setTimeout(() => resolve(null), localDelayTime);
+        await new Promise((resolve, reject) => {
+          // sleep for n milliseconds
+          setTimeout(() => resolve(null), localDelayTime);
 
-        // on button click to rerun algorithm, restore generator with initial data
-        buttonRef.current.addEventListener('click', () => {
-          resolve(it = runBubbleSort(list));
+          // on button click to rerun algorithm, restore generator with initial data
+          buttonRef.current.addEventListener('click', () => {
+            resolve(it = runBubbleSort(list));
+          });
+
+          // on delayTime change, update local variable
+          inputRef.current.addEventListener('change', (event: ChangeEvent<HTMLInputElement>) => {
+            resolve(localDelayTime = +event.target.value);
+          });
+
+          // on sorting algorithm change, stop function
+          changeAlgoRef.current.addEventListener('click', () => {
+            resolve(stop = true);
+          });
         });
 
-        // on delayTime change, update local variable
-        inputRef.current.addEventListener('change', (event: ChangeEvent<HTMLInputElement>) => {
-          resolve(localDelayTime = +event.target.value);
-        });
-      });
-
-      // go to next element of an iterator
-      result = it.next();
+        // go to next element of an iterator
+        result = it.next();
+      }
     }
   }
 
@@ -108,12 +131,14 @@ function Visualization({length}: TableProps) {
              onChange={(ev) => setDelayTime(+ev.target.value)}
       />
       <button ref={buttonRef} onClick={() => runSortingAlgorithm()}>Run script</button>
+      <button ref={changeAlgoRef} hidden>Change Algo</button>
     </div>
   );
 }
 
 Visualization.propTypes = {
   length: PropTypes.number.isRequired,
+  algorithm: PropTypes.string.isRequired
 };
 
 export default Visualization;

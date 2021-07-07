@@ -1,5 +1,6 @@
 type TableProps = {
-  length: number,
+  length: number;
+  algorithm: string;
 }
 
 type ChartProps = {

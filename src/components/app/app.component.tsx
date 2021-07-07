@@ -5,7 +5,7 @@ import {Header} from '../header';
 
 function App() {
   const [length, setLength] = useState(100);
-  const [algorithm, setAlgorithm] = useState('bubble-sort');
+  const [algorithm, setAlgorithm] = useState('insertion-sort');
 
   return (
     <div>
@@ -14,7 +14,7 @@ function App() {
               algorithm={algorithm}
               setAlgorithm={setAlgorithm}
       />
-      <Visualization length={length}/>
+      <Visualization length={length} algorithm={algorithm} />
     </div>
   );
 }
