@@ -5,7 +5,7 @@ import {Header} from '../header';
 
 function App() {
   const [length, setLength] = useState(100);
-  const [algorithm, setAlgorithm] = useState('selection-sort');
+  const [algorithm, setAlgorithm] = useState('quick-sort');
 
   return (
     <div>
