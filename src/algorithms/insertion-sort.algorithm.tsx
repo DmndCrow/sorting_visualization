@@ -28,7 +28,7 @@ function updateColor(array: BlockItem[], index: number, color1: string, color2: 
   }
 }
 
-// run bubble sort algorithm
+// run insertion sort algorithm
 function insertionSortStep(state: State): Partial<State> {
   let { array, swaps, comparisons, i, j } = state;
 
@@ -68,9 +68,9 @@ function insertionSortStep(state: State): Partial<State> {
   return { array, swaps, comparisons, i, j };
 }
 
-// generator that runs bubble sort
+// generator that runs insertion sort
 function* runInsertionSort(array: BlockItem[]): Generator<State> {
-  // generator initial state of an bubble sort algorithm
+  // generator initial state of an insertion sort algorithm
   let state: State = insertionSortInit(array);
 
   // return initial state

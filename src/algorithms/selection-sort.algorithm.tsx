@@ -1,7 +1,7 @@
 import {BlockItem, State} from '../utils/types';
 import {COMPLETED_COLOR, DEFAULT_COLOR, ITERATION_COLOR, SELECTED_COLOR} from '../utils/constants';
 
-// initialize bubble sorting algorithm
+// initialize selection sorting algorithm
 function selectionSortInit(array: BlockItem[]): State {
   // set initial 2 nodes for comparison with required color
   // and mark rest of block items with default color
@@ -26,7 +26,7 @@ function selectionSortInit(array: BlockItem[]): State {
   };
 }
 
-// run bubble sort algorithm
+// run selection sort algorithm
 function selectionSortStep(state: State): Partial<State> {
   let { array, swaps, comparisons, i, j, selected_index } = state;
 
@@ -63,9 +63,9 @@ function selectionSortStep(state: State): Partial<State> {
   return { array, swaps, comparisons, i, j, selected_index };
 }
 
-// generator that runs bubble sort
+// generator that runs selection sort
 function* runSelectionSort(array: BlockItem[]): Generator<State> {
-  // generator initial state of an bubble sort algorithm
+  // generator initial state of an selection sort algorithm
   let state: State = selectionSortInit(array);
 
   // return initial state

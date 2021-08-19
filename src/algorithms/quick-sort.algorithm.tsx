@@ -1,7 +1,7 @@
 import {BlockItem, State} from '../utils/types';
 import {COMPLETED_COLOR, DEFAULT_COLOR, ITERATION_COLOR} from '../utils/constants';
 
-// initialize bubble sorting algorithm
+// initialize quick sorting algorithm
 function quickSortInit(array: BlockItem[]): State {
   // set initial 2 nodes for comparison with required color
   // and mark rest of block items with ITERATION color
@@ -20,7 +20,7 @@ function quickSortInit(array: BlockItem[]): State {
   };
 }
 
-// run bubble sort algorithm
+// run quick sort algorithm
 function quickSortStep(state: State): Partial<State> {
   let { array, swaps, comparisons, i, j } = state;
 
@@ -61,9 +61,9 @@ function quickSortStep(state: State): Partial<State> {
   return {array, swaps, comparisons, i, j};
 }
 
-// generator that runs bubble sort
+// generator that runs quick sort
 function* runQuickSort(array: BlockItem[]): Generator<State> {
-  // generator initial state of an bubble sort algorithm
+  // generator initial state of an quick sort algorithm
   let state: State = quickSortInit(array);
 
   // return initial state
